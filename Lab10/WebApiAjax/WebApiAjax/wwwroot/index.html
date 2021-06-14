@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Welcome Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+</head>
+<body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#calcJQ").click(function () {
+                var x = $("#x").val();
+                var y = $("#y").val();
+                $.ajax({
+                    type: "GET",
+                    url: "/api/math?x=" + x + "&y=" + y,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: {
+                        sum: jQuery('.sum').val(),
+                        difference: jQuery('.difference').val(),
+                        product: jQuery('.product').val(),
+                        quotient: jQuery('.quotient').val(),
+                    },
+                    success: function (data) {
+                        jQuery('#sum').text(data.sum);
+                        jQuery('#difference').text(data.difference);
+                        jQuery('#product').text(data.product);
+                        jQuery('#quotient').text(data.quotient);
+                    }
+                });
+            });
+            $("#calcVJS").click(function () {
+                var httpRequest = new XMLHttpRequest();
+                var x = $("#x").val();
+                var y = $("#y").val();
+                httpRequest.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var myArr = JSON.parse(this.responseText);
+                        myFunction(myArr);
+                    }
+                };
+                httpRequest.open('GET', '/api/math?x=' + x + '&y=' + y, true);
+                httpRequest.setRequestHeader('Content-Type', 'application/json');
+                httpRequest.send();
+                function myFunction(arr) {
+                    var sum = arr.sum;
+                    var difference = arr.difference;
+                    var product = arr.product;
+                    var quotient = arr.quotient;
+                    document.getElementById("sum").innerHTML = sum;
+                    document.getElementById("difference").innerHTML = difference;
+                    document.getElementById("product").innerHTML = product;
+                    document.getElementById("quotient").innerHTML = quotient;
+                }
+            })
+        });
+    </script>
+    <div>
+        <h1>Calculations</h1>
+        <form>
+            x = <input type="text" id="x" />
+            y = <input type="text" id="y" />
+            <label>Call API (jQuery)</label>
+            <input type="button" id="calcJQ" value="Calculate jQuery" />
+            <label>Call API (vanilla JS)</label>
+            <input type="button" id="calcVJS" value="Calculate vanilla JS" />
+        </form>
+        x + y = <span id="sum"></span><br />
+        x - y = <span id="difference"></span><br />
+        x * y = <span id="product"></span><br />
+        x / y = <span id="quotient"></span><br />
+    </div>
+</body>
+</html>
