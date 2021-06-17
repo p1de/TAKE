@@ -12,6 +12,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -36,7 +37,15 @@ public class NewsMDB implements MessageListener {
     public void onMessage(Message message) {
         ObjectMessage msg = null;
         try {
-            if (message instanceof ObjectMessage) {
+            if(message instanceof TextMessage){
+                TextMessage textMessage = (TextMessage)message;  
+                String[] text = textMessage.getText().split(" ");
+                NewsItem e = new NewsItem();
+                e.setHeading(text[0]);
+                e.setBody(text[1]);
+                em.persist(e);
+            }
+            else if (message instanceof ObjectMessage) {
                 msg = (ObjectMessage) message;
                 NewsItem e = (NewsItem) msg.getObject();
                 em.persist(e);
