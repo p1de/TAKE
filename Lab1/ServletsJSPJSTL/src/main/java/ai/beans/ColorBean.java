@@ -10,6 +10,7 @@ package ai.beans;
  * @author Szymon
  */
 public class ColorBean {
+ private String border;
  private String foregroundColor;
  private String backgroundColor;
 
@@ -42,5 +43,22 @@ public class ColorBean {
      */
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    /**
+     * @return the border
+     */
+    public String getBorder() {
+        return border;
+    }
+
+    /**
+     * @param border the border to set
+     */
+    public void setBorder(String border) {
+        if(border.equals("y")){
+            this.border = "border";
+        }
+        else this.border = "";
     }
 }
